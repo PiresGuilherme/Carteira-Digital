@@ -1,21 +1,22 @@
 import { AppDataSource } from "./model/data-source"
 import { User } from "./model/entity/User"
- 
+import { router as userRoute } from "./view/userRoute"
+import { router as walletRoute } from "./view/walletRoute"
+import express, { json } from "express"
+
+const server = express();
+server.use(json());
+import cors from 'cors';
+
 
 AppDataSource.initialize().then(async () => {
+    server.listen(3000, () => {
+        console.log('ouvindo');
+    })
+    server.use(cors());
 
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+    server.use('/api', userRoute);
+    server.use('/api', walletRoute)
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
-
-    console.log("Here you can setup and run express / fastify / any other framework.")
 
 }).catch(error => console.log(error))

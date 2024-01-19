@@ -22,6 +22,6 @@ export class Wallet {
     quantity : number;
 
     @ManyToOne(()=> User,user=> user.wallet)
-    user:User[]
+    user:User
 
 }

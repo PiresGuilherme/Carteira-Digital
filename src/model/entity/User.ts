@@ -14,5 +14,5 @@ export class User {
     age: number
 
     @OneToMany(()=> Wallet, wallet => wallet.user)
-    wallet: Wallet;
+    wallet: Wallet[];
 }

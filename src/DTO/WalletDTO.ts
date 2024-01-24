@@ -1,10 +1,10 @@
 import { User } from "../model/entity/User";
-import { Wallet, typeCoin } from "../model/entity/Wallet";
+import { Wallet } from "../model/entity/Wallet";
 
 export class WalletDTO {
     constructor(
         public id:number,
-        public type_coin : typeCoin,
+        public type_coin : string,
         public quantity:number,
         public user:User
     ){}

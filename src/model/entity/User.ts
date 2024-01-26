@@ -8,10 +8,16 @@ export class User {
     id: number
 
     @Column()
-    firstName: string
+    name: string
 
     @Column()
     age: number
+
+    @Column({unique:true})
+    email:string
+
+    @Column()
+    password: string
 
     @OneToMany(()=> Wallet, wallet => wallet.user)
     wallet: Wallet[];

@@ -18,10 +18,9 @@ export class UserController {
             const newUser = userDTO.tomodel();
             const response = await userService.newUser(newUser);
             console.log(response);
-            
             return UserDTO.fromModel(response);
         } catch (error) {
-            console.log(error.message);
+            throw new Error(error.message)
         }
     }
 } 

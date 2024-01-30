@@ -31,7 +31,9 @@ router.post("/wallet/convert", (req: Request, res: Response) => {
 
 router.get("/wallet/:userId/total",(req: Request, res: Response) => {
     const walletController = new WalletController();
-    walletController.totalUserMoney(req.params.userId);
+    const token = req.headers.authorization?.split(" ")[1];
+
+    walletController.totalUserMoney(req.params.userId,token);
 } )
 
 router.get("/wallet/:userId/:coin", (req: Request, res: Response) => {

@@ -2,6 +2,7 @@ import { WalletDTO } from "../DTO/WalletDTO";
 import { Wallet } from "../model/entity/Wallet";
 import axios from 'axios';
 import { WalletService } from "../model/service/WalletService";
+import { SessionController } from "./SessionController";
 
 
 export class WalletController {
@@ -65,7 +66,13 @@ export class WalletController {
         }
     }
 
-    async totalUserMoney(userId) {
+    async totalUserMoney(userId, token) {
+        const sessionController = new SessionController();
+        const verify = sessionController.verifyToken(token)
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTcwNjU3MjAwM30.HtOS03qlmSbkpdPKEoTDx--D19Dq7k9FYNJiNmeyT4I"
+        if (!verify) {
+            return Error("token não informado");
+        }
         const walletController = new WalletController();
         var userCoins = await walletController.getUserWallet(userId);
         var total:number = 0;

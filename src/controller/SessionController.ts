@@ -21,7 +21,6 @@ export class SessionController {
                 return Error("Usuário ou senha inválidos.");
             }
             
-            
             return jwt.sign({
                 userId: user.id
             }, secretKey)

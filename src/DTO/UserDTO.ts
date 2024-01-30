@@ -29,7 +29,6 @@ export class UserDTO {
         newUser.age = this.age,
         newUser.email = this.email,
         newUser.password = this.password
-
         return newUser;
     }
 }

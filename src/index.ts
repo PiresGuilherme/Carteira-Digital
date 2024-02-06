@@ -7,6 +7,7 @@ import express, { json } from "express"
 const server = express();
 
 import cors from 'cors';
+import { AuthenticationMiddleware } from "./middleware/AuthenticationMiddleware"
 
 
 AppDataSource.initialize().then(async () => {
@@ -17,6 +18,8 @@ AppDataSource.initialize().then(async () => {
     server.use(cors());
 
     server.use('/api', userRoute);
+
+    // server.use(new AuthenticationMiddleware().validateAuthentication);
     server.use('/api', walletRoute);
 
 

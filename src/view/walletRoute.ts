@@ -1,8 +1,13 @@
-import { Router, Request, Response } from "express";
+import express, { Router, Request, Response } from "express";
+import "express-async-errors";
 import { WalletController } from "../controller/WalletController";
 import { WalletDTO } from "../DTO/WalletDTO";
+import { AuthenticationMiddleware } from "../middleware/AuthenticationMiddleware";
+
 
 const router = Router();
+
+router.use(new AuthenticationMiddleware().validateAuthentication);
 
 router.get("/wallet", (req: Request, res: Response) => {
     const walletController = new WalletController();
@@ -19,6 +24,7 @@ router.post("/wallet", (req: Request, res: Response) => {
     ));
 })
 
+
 router.post("/wallet/convert", (req: Request, res: Response) => {
     const walletController = new WalletController();
     walletController.convertCoin(
@@ -31,9 +37,7 @@ router.post("/wallet/convert", (req: Request, res: Response) => {
 
 router.get("/wallet/:userId/total",(req: Request, res: Response) => {
     const walletController = new WalletController();
-    const token = req.headers.authorization?.split(" ")[1];
-
-    walletController.totalUserMoney(req.params.userId,token);
+    walletController.totalUserMoney(req.params.userId);
 } )
 
 router.get("/wallet/:userId/:coin", (req: Request, res: Response) => {

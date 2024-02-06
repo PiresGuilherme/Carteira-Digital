@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import  asyncHandler  from  'express-async-handler'
 import { UserController } from "../controller/UserController";
 import { UserDTO } from "../DTO/UserDTO";
 import { SessionController } from "../controller/SessionController";

@@ -31,5 +31,14 @@ export class WalletService{
         return total    
     }
 
-
+    getTransaction(transactionId){
+        const transaction = walletRepository.findOne({
+            where:{
+                id:transactionId
+            }
+        })
+        if (!transaction) {
+            
+        }
+    }
 }

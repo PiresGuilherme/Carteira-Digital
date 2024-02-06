@@ -1,10 +1,15 @@
 import { UserService } from "../model/service/UserSevice";
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { NonExistentUser } from "../exceptions/NonExistentUser";
 
 const secretKey = "PiresPiresPires"
-
+interface DecodedTokenPayLoad extends JwtPayload {
+    userId: number;
+  }
 export class SessionController {
+
+    
     async login(email: string, password: string) {
         try {
             const userService = new UserService();
@@ -12,7 +17,7 @@ export class SessionController {
             console.log(user);
             
             if (!user) {
-                return Error("Usuário ou senha inválidos.");
+                throw new NonExistentUser();
             }
             const validPass = await bcrypt.compare(password, user.password);
             console.log(validPass);
@@ -23,21 +28,23 @@ export class SessionController {
             
             return jwt.sign({
                 userId: user.id
-            }, secretKey)
+            },
+             secretKey)
+
         } catch (error) {
             throw new Error(error.message);
         }
     }
 
-    async verifyToken(token: string) {
+    verifyToken(token: string) {
         if (!token) {
             throw new Error("Usuário não autenticado.")
         }
         try {
-            const jwtPayload = jwt.verify(token, secretKey);
-
+            const jwtPayload = jwt.verify(token, secretKey)as DecodedTokenPayLoad;;
+            return jwtPayload;
         } catch (error) {
-            throw new Error("Token invalido.")
+            throw new Error("Token inválido.")
 
         }
     }

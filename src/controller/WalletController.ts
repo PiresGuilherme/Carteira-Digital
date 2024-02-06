@@ -3,6 +3,7 @@ import { Wallet } from "../model/entity/Wallet";
 import axios from 'axios';
 import { WalletService } from "../model/service/WalletService";
 import { SessionController } from "./SessionController";
+import { ImpossibleConversion } from "../exceptions/ImpossibleConversion";
 
 
 export class WalletController {
@@ -34,18 +35,20 @@ export class WalletController {
             return totalCoins
         } catch (error) {
             console.error('Erro ao converter moeda:', error);
-            throw error;
+            throw new ImpossibleConversion();
         }
     }
 
     async convertCoin(quantity, oldType, newType, userId) {
-        try {
             const walletService = new WalletService();
             const price = await axios.get(`https://economia.awesomeapi.com.br/last/${oldType}-${newType}`)
             const totalCoins = await walletService.totalValueWallet(`${oldType}`, userId);
+            if (price.data.status) {
+                throw new ImpossibleConversion();
+            }
 
             if (quantity > totalCoins) {
-                return;
+                throw new ImpossibleConversion();
             }
             const convertedValue = quantity * price.data[`${oldType}${newType}`].high;
             await walletService.newWallet({
@@ -60,19 +63,10 @@ export class WalletController {
                 user: userId
             })
             console.log('Conversão concluída.');
-        } catch (error) {
-            console.error('Erro ao converter moeda:', error);
-            throw error;
         }
-    }
+    
 
-    async totalUserMoney(userId, token) {
-        const sessionController = new SessionController();
-        const verify = sessionController.verifyToken(token)
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTcwNjU3MjAwM30.HtOS03qlmSbkpdPKEoTDx--D19Dq7k9FYNJiNmeyT4I"
-        if (!verify) {
-            return Error("token não informado");
-        }
+    async totalUserMoney(userId) {
         const walletController = new WalletController();
         var userCoins = await walletController.getUserWallet(userId);
         var total:number = 0;
@@ -88,7 +82,9 @@ export class WalletController {
         console.log(total);
     }
     
+    async reimbursement(transactionId){
+        const walletService = new WalletService();
         
-        
+    }
     
 }

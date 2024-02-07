@@ -1,3 +1,4 @@
+import { ImpossibleConversion } from "../../exceptions/ImpossibleConversion";
 import { AppDataSource } from "../data-source";
 import { Wallet } from "../entity/Wallet";
 
@@ -31,14 +32,15 @@ export class WalletService{
         return total    
     }
 
-    getTransaction(transactionId){
-        const transaction = walletRepository.findOne({
+    async getTransaction(transactionId){       
+        const transaction = await  walletRepository.findOne({
             where:{
                 id:transactionId
+            }            ,
+            relations: {
+                user:true
             }
-        })
-        if (!transaction) {
-            
-        }
+        })       
+        return transaction;
     }
 }

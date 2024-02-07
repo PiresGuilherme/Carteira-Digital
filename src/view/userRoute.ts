@@ -3,6 +3,7 @@ import  asyncHandler  from  'express-async-handler'
 import { UserController } from "../controller/UserController";
 import { UserDTO } from "../DTO/UserDTO";
 import { SessionController } from "../controller/SessionController";
+import "express-async-errors"
 
 const router = Router();
 
@@ -12,9 +13,9 @@ router.get("/users", async (req: Request, res: Response) => {
     console.log(users);
 });
 
-router.post("/users", (req: Request, res: Response) => {
+router.post("/users", async (req: Request, res: Response) => {
     const userController = new UserController();
-    userController.newUser(new UserDTO(
+    await userController.newUser(new UserDTO(
         null,
         req.body.name,
         req.body.age,
@@ -22,16 +23,10 @@ router.post("/users", (req: Request, res: Response) => {
         req.body.password
     ))
 })
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login",  async (req: Request, res: Response) => {
     const sessionController = new SessionController();
-    try {
-        console.log(req.body.email, req.body.password);
-        
         const token = await sessionController.login(req.body.email, req.body.password);
         return res.status(200).json({token})
-    } catch (error) {
-        return res.status(400).json({ error: error.message })
-    }
 })
 export { router }
 

@@ -7,11 +7,16 @@ export class UserService {
     getUsers() {
         return userRepository.find();
     }
+
     getUser(email) {
         console.log(email);
-        
         return userRepository.findOneBy({
             email:email
+        });
+    }
+    getUserById(userId){
+        return userRepository.findOneBy({
+            id:userId
         });
     }
 

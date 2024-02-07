@@ -1,11 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, ManyToOne } from "typeorm"
 import { User } from "./User";
 
-// export enum typeCoin {
-//     "EUR",
-//     "USD",
-//     "BRL"
-// }
+export type type_transaction= "credito" | "conversao" | "reembolso"
+
 @Entity()
 export class Wallet {
 
@@ -20,6 +17,13 @@ export class Wallet {
 
     @Column()
     createdAt: Date;
+
+    @Column({
+        type:"enum",
+        enum: [ "credito", "conversao", "reembolso"],
+        default: "credito"
+    })
+    type_transaction : type_transaction;
 
     @ManyToOne(()=> User,user=> user.wallet)
     user:User
